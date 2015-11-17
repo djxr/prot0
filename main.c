@@ -32,7 +32,7 @@ struct ai_t {
 };/*}}}*/
 
 int main(int argc, char *argv[]){
+	printf("This is actually a program, I promise!");
 
-	// DO STUFF!
 	return 0;
 }
