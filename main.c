@@ -8,7 +8,6 @@ enum game_state {
 	menu,
 	overworld,
 	underworld
-		//...
 };
 enum player_state {
 	stand,
@@ -16,27 +15,26 @@ enum player_state {
 	mov_left,
 	mov_right,
 	mov_down
-		//...
 };
 enum ai_state {
 	offscreen,
 	idle
-		//...
 };
 
 // STATE MACHINE STRUCTURES
 struct game_t {
-	enum game_state .state;
-	//...
-}game;
+	enum game_state state;
+};
 
 struct player_t {
-	enum player_state .state;
-	//...
-}player;
+	enum player_state state;
+};
 
 struct ai_t {
-	enum ai_state .state;
-	//...
-}monster;
+	enum ai_state state;
+};
 
+int main(int argc, char *argv[]){
+
+	return 0;
+}
