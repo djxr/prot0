@@ -31,8 +31,22 @@ struct ai_t {
 	enum ai_state state;
 };/*}}}*/
 
-int main(int argc, char *argv[]){
-	printf("This is actually a program, I promise!");
+init(){
+	if(SDL_Init(SDL_INIT_VIDEO)){
+		fprintf("SDL Init failed: %s\n",SDL_GetError());
+	}
+	SDL_Log("I initialized");
+}
 
+tini(){
+	SDL_Quit();
+	SDL_Log("I de-initialized");
+}
+
+int main(int argc, char *argv[]){
+
+	init();
+
+	tini();
 	return 0;
 }
