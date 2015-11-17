@@ -26,7 +26,8 @@ enum ai_state
 // STATE MACHINE STRUCTURES /*{{{*/
 struct game_t
 {
-	enum game_state state;
+	enum game_state	state;
+	bool		run;
 };
 struct player_t
 {
@@ -37,12 +38,13 @@ struct ai_t
 	enum ai_state state;
 };/*}}}*/
 
+struct game_t	game = {.state = cutscene, .run = true};
 SDL_Window	*win;
 SDL_Renderer	*rend;
 
 int init() /*{{{*/
 {
-	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS))
+	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER))
 	{
 		fprintf(stderr, "SDL Init failed: %s\n",SDL_GetError());
 		return 1;
@@ -79,22 +81,50 @@ int tini() /*{{{*/
 	return 0;
 }/*}}}*/
 
-int render()
+int handle_events() /*{{{*/
+{
+	return 0;
+}/*}}}*/
+int update() /*{{{*/
+{
+	return 0;
+}/*}}}*/
+int render() /*{{{*/
 {
 	SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
 	SDL_RenderClear(rend);
 	SDL_RenderPresent(rend);
 
 	return 0;
-}
+}/*}}}*/
 
 int main(int argc, char *argv[])
 {
-
 	init();
 
-	render();
-	SDL_Delay(2000);
+	Uint32	time;
+	Uint32	last_update =	0;
+	Uint32	last_render =	0;
+
+	while(game.run)
+	{
+		time = SDL_GetTicks();
+
+		if(time > last_update + 8)
+		{
+			update();
+			last_update = time;
+		}
+
+		if(time > last_render + 16)
+		{
+			render();
+			last_render = time;
+		}
+
+		SDL_Delay(2000);
+		game.run = false;
+	}
 
 	tini();
 	return 0;
