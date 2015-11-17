@@ -79,11 +79,21 @@ int tini() /*{{{*/
 	return 0;
 }/*}}}*/
 
+int render()
+{
+	SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+	SDL_RenderClear(rend);
+	SDL_RenderPresent(rend);
+
+	return 0;
+}
+
 int main(int argc, char *argv[])
 {
 
 	init();
 
+	render();
 	SDL_Delay(2000);
 
 	tini();
