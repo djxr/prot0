@@ -26,17 +26,17 @@ enum ai_state {
 
 // STATE MACHINE STRUCTURES
 struct game_t {
-	game_state .state;
+	enum game_state .state;
 	//...
 }game;
 
 struct player_t {
-	player_state .state;
+	enum player_state .state;
 	//...
 }player;
 
 struct ai_t {
-	ai_state .state;
+	enum ai_state .state;
 	//...
 }monster;
 
