@@ -38,12 +38,14 @@ struct ai_t
 };/*}}}*/
 
 SDL_Window	*win;
+SDL_Renderer	*rend;
 
 int init() /*{{{*/
 {
 	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS))
 	{
 		fprintf(stderr, "SDL Init failed: %s\n",SDL_GetError());
+		return 1;
 	}
 
 	win = SDL_CreateWindow(
@@ -51,16 +53,29 @@ int init() /*{{{*/
 			0, 0,
 			640, 480,
 			0);
+	if(win == NULL)
+	{
+		SDL_Log("Window creation failed: %s", SDL_GetError());
+	}
+
+	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+
+	if(rend == NULL)
+	{
+		SDL_Log("Renderer creation failed: %s", SDL_GetError());
+	}
 
 	SDL_Log("I initialized");
+
 	return 0;
 }/*}}}*/
 int tini() /*{{{*/
 {
+	SDL_DestroyRenderer(rend);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
 
-	SDL_Log("I de-initialized");
+	SDL_Log("dezilaitini I");
 	return 0;
 }/*}}}*/
 
