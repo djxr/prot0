@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 
 #define DISPLAY_NUM 0
+#define PIXEL_SCALE_UP 4
 
 // STATE ENUMS /*{{{*/
 enum game_state
@@ -24,7 +25,16 @@ enum ai_state
 {
 	offscreen,
 	idle
-};/*}}}*/
+};
+enum tile_type
+{
+	ground,
+	wall,
+	door,
+	chest,
+	shop
+};
+/*}}}*/
 // STRUCTURES /*{{{*/
 struct game_t
 {
@@ -40,9 +50,13 @@ struct player_t
 struct ai_t
 {
 	enum ai_state state;
-};/*}}}*/
-
-// GLOBAL VARIABLES/*{{{*/
+};
+struct tile_t
+{
+	enum tile_type type;
+};
+/*}}}*/
+// GLOBAL VARIABLES /*{{{*/
 struct game_t	game = {.state = cutscene, .run = true};
 struct player_t	player = {.state = still};
 
