@@ -12,7 +12,7 @@ enum game_state
 };
 enum player_state
 {
-	stand,
+	still,
 	mov_up,
 	mov_left,
 	mov_right,
@@ -39,6 +39,8 @@ struct ai_t
 };/*}}}*/
 
 struct game_t	game = {.state = cutscene, .run = true};
+struct player_t	player = {.state = still};
+
 SDL_Window	*win;
 SDL_Renderer	*rend;
 
@@ -81,8 +83,24 @@ int tini() /*{{{*/
 	return 0;
 }/*}}}*/
 
-int handle_events() /*{{{*/
-{
+int handle_events(SDL_Event *e) /*{{{*/
+{	
+	if(e->type == SDL_QUIT)
+		game.run = false;
+	else
+	{
+		switch(game.state)
+		{
+			case cutscene:
+				break;
+			case menu:
+				break;
+			case overworld:
+				break;
+			case underworld:
+				break;
+		}
+	}
 	return 0;
 }/*}}}*/
 int update() /*{{{*/
@@ -106,9 +124,14 @@ int main(int argc, char *argv[])
 	Uint32	last_update =	0;
 	Uint32	last_render =	0;
 
+	SDL_Event	event;
+
 	while(game.run)
 	{
 		time = SDL_GetTicks();
+
+		while(SDL_PollEvent(&event))
+			handle_events(&event);
 
 		if(time > last_update + 8)
 		{
@@ -121,9 +144,6 @@ int main(int argc, char *argv[])
 			render();
 			last_render = time;
 		}
-
-		SDL_Delay(2000);
-		game.run = false;
 	}
 
 	tini();
