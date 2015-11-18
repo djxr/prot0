@@ -5,7 +5,7 @@
 #define DISPLAY_NUM 0
 #define PIXEL_SCALE_UP 4
 
-// STATE ENUMS /*{{{*/
+// State Enums /*{{{*/
 enum game_state
 {
 	cutscene,
@@ -35,7 +35,7 @@ enum tile_type
 	shop
 };
 /*}}}*/
-// STRUCTURES /*{{{*/
+// Structures /*{{{*/
 struct game_t
 {
 	enum game_state	state;
@@ -56,7 +56,7 @@ struct tile_t
 	enum tile_type type;
 };
 /*}}}*/
-// GLOBAL VARIABLES /*{{{*/
+// Global Variables /*{{{*/
 struct game_t	game = {.state = cutscene, .run = true};
 struct player_t	player = {.state = still};
 
@@ -151,11 +151,12 @@ int main(int argc, char *argv[])
 {
 	init();
 
+	// Loop Variables /*{{{*/
 	Uint32		time;
 	Uint32		last_update =	0;
 	Uint32		last_render =	0;
 
-	SDL_Event	event;
+	SDL_Event	event;/*}}}*/
 
 	while(game.run)
 	{
@@ -163,18 +164,18 @@ int main(int argc, char *argv[])
 
 		while(SDL_PollEvent(&event))
 			handle_events(&event);
-
-		if(time > last_update + 8)
+		// update /*{{{*/
+		if(time > last_update + 8) 
 		{
 			update();
 			last_update = time;
-		}
-
-		if(time > last_render + 16)
+		}/*}}}*/
+		// render /*{{{*/
+		if(time > last_render + 16) 
 		{
 			render();
 			last_render = time;
-		}
+		}/*}}}*/
 	}
 
 	tini();
