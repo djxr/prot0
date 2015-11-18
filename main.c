@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
+#define DISPLAY_NUM 0
+
 // STATE ENUMS /*{{{*/
 enum game_state
 {
@@ -23,45 +25,49 @@ enum ai_state
 	offscreen,
 	idle
 };/*}}}*/
-// STATE MACHINE STRUCTURES /*{{{*/
+// STRUCTURES /*{{{*/
 struct game_t
 {
 	enum game_state	state;
 	bool		run;
+	SDL_Rect	rect;
 };
 struct player_t
 {
-	enum player_state state;
+	enum player_state	state;
+	int			rep;
 };
 struct ai_t
 {
 	enum ai_state state;
 };/*}}}*/
 
+// GLOBAL VARIABLES/*{{{*/
 struct game_t	game = {.state = cutscene, .run = true};
 struct player_t	player = {.state = still};
 
 SDL_Window	*win;
 SDL_Renderer	*rend;
+/*}}}*/
 
 int init() /*{{{*/
 {
-	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER))
+	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER)) /*{{{*/
 	{
 		fprintf(stderr, "SDL Init failed: %s\n",SDL_GetError());
 		return 1;
-	}
+	}/*}}}*/
 
-	win = SDL_CreateWindow(
-			"windows yo.",
-			0, 0,
-			640, 480,
+	SDL_GetDisplayBounds(DISPLAY_NUM, &game.rect);
+
+	win = SDL_CreateWindow("windows, yo.",
+			game.rect.x, game.rect.y,
+			game.rect.w, game.rect.h,
 			0);
 	if(win == NULL)
 	{
 		SDL_Log("Window creation failed: %s", SDL_GetError());
 	}
-
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
 	if(rend == NULL)
@@ -105,6 +111,17 @@ int handle_events(SDL_Event *e) /*{{{*/
 }/*}}}*/
 int update() /*{{{*/
 {
+	switch(game.state)
+	{
+		case cutscene:
+			break;
+		case menu:
+			break;
+		case overworld:
+			break;
+		case underworld:
+			break;
+	}
 	return 0;
 }/*}}}*/
 int render() /*{{{*/
@@ -120,9 +137,9 @@ int main(int argc, char *argv[])
 {
 	init();
 
-	Uint32	time;
-	Uint32	last_update =	0;
-	Uint32	last_render =	0;
+	Uint32		time;
+	Uint32		last_update =	0;
+	Uint32		last_render =	0;
 
 	SDL_Event	event;
 
