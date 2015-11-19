@@ -39,17 +39,20 @@ enum tile_type
 struct game_t
 {
 	enum game_state	state;
-	bool		run;
 	SDL_Rect	rect;
+	bool		run;
 };
 struct player_t
 {
 	enum player_state	state;
+	SDL_Rect		rect;
 	int			rep;
+	int			orbs;
 };
 struct ai_t
 {
 	enum ai_state state;
+	SDL_Rect		rect;
 };
 struct tile_t
 {
@@ -118,6 +121,19 @@ int handle_events(SDL_Event *e) /*{{{*/
 			case overworld:
 				break;
 			case underworld:
+				break;
+		}
+		switch(player.state)
+		{
+			case still:
+				break;
+			case mov_up:
+				break;
+			case mov_left:
+				break;
+			case mov_right:
+				break;
+			case mov_down:
 				break;
 		}
 	}
