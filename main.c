@@ -67,6 +67,47 @@ SDL_Window	*win;
 SDL_Renderer	*rend;
 /*}}}*/
 
+int init();
+int tini();
+int handle_events(SDL_Event *e);
+int update();
+int render();
+
+int main(int argc, char *argv[])
+{
+	init();
+
+	// Loop Variables /*{{{*/
+	Uint32		time;
+	Uint32		last_update =	0;
+	Uint32		last_render =	0;
+
+	SDL_Event	event;/*}}}*/
+
+	while(game.run)
+	{
+		time = SDL_GetTicks();
+
+		while(SDL_PollEvent(&event))
+			handle_events(&event);
+		// update /*{{{*/
+		if(time > last_update + 8) 
+		{
+			update();
+			last_update = time;
+		}/*}}}*/
+		// render /*{{{*/
+		if(time > last_render + 16) 
+		{
+			render();
+			last_render = time;
+		}/*}}}*/
+	}
+
+	tini();
+	return 0;
+}
+
 int init() /*{{{*/
 {
 	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER)) /*{{{*/
@@ -162,38 +203,3 @@ int render() /*{{{*/
 
 	return 0;
 }/*}}}*/
-
-int main(int argc, char *argv[])
-{
-	init();
-
-	// Loop Variables /*{{{*/
-	Uint32		time;
-	Uint32		last_update =	0;
-	Uint32		last_render =	0;
-
-	SDL_Event	event;/*}}}*/
-
-	while(game.run)
-	{
-		time = SDL_GetTicks();
-
-		while(SDL_PollEvent(&event))
-			handle_events(&event);
-		// update /*{{{*/
-		if(time > last_update + 8) 
-		{
-			update();
-			last_update = time;
-		}/*}}}*/
-		// render /*{{{*/
-		if(time > last_render + 16) 
-		{
-			render();
-			last_render = time;
-		}/*}}}*/
-	}
-
-	tini();
-	return 0;
-}
