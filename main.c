@@ -65,7 +65,7 @@ typedef struct atlas_t
 	SDL_Rect	*img;
 }atlas_t;
 /*}}}*/
-// Global Variables 
+// Global Variables /*{{{*/
 int	i;
 int	j;
 
@@ -76,8 +76,8 @@ SDL_Window	*win;
 SDL_Renderer	*rend;
 
 atlas_t		bg;
-
-
+/*}}}*/
+// Function Declarations /*{{{*/
 int init();
 int tini();
 
@@ -91,7 +91,7 @@ void	dstr_atlas(atlas_t *a);
 int filltile(atlas_t *a, int img_index);
 
 int tile();
-
+/*}}}*/
 int main(int argc, char *argv[])
 {
 	init();
@@ -150,7 +150,7 @@ int init() /*{{{*/
 	{
 		SDL_Log("Window creation failed: %s", SDL_GetError());
 	}
-	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
 	if(rend == NULL)
 	{
@@ -327,10 +327,6 @@ int render() /*{{{*/
 	return 0;
 }/*}}}*/
 
-int tile()
-{
-	return 0;
-}
 atlas_t bld_atlas(char *bitmap, size_t len) /*{{{*/
 {
 	SDL_Texture	*texture;
@@ -358,7 +354,7 @@ void	dstr_atlas(atlas_t *a) /*{{{*/
 	SDL_DestroyTexture(a->tex);
 	free(a->img);
 }/*}}}*/
-int filltile(atlas_t *a, int img_index)
+int filltile(atlas_t *a, int img_index) /*{{{*/
 {
 	for(i = 0; i < (game.rect.h / TILE_SZ); i++)
 		for(j = 0; j < (game.rect.w / TILE_SZ); j++)
@@ -367,4 +363,4 @@ int filltile(atlas_t *a, int img_index)
 			SDL_RenderCopy(rend, a->tex, &a->img[img_index], &paintbrush);
 		}
 	return 0;
-}
+}/*}}}*/
