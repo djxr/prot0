@@ -180,12 +180,95 @@ int handle_events(SDL_Event *e) /*{{{*/
 		switch(game.state)
 		{
 			case cutscene:
+				switch(e->type)
+				{
+					case SDL_KEYDOWN:
+						switch(e->key.keysym.sym)
+						{
+							case SDLK_1:
+								game.state = cutscene;
+								break;
+							case SDLK_2:
+								game.state = menu;
+								break;
+							case SDLK_3:
+								game.state = overworld;
+								break;
+							case SDLK_4:
+								game.state = underworld;
+								break;
+						}
+						break;
+				}
 				break;
 			case menu:
+				switch(e->type)
+				{
+					case SDL_KEYDOWN:
+						switch(e->key.keysym.sym)
+						{
+							case SDLK_1:
+								game.state = cutscene;
+								break;
+							case SDLK_2:
+								game.state = menu;
+								break;
+							case SDLK_3:
+								game.state = overworld;
+								break;
+							case SDLK_4:
+								game.state = underworld;
+								break;
+						}
+						break;
+				}
+
 				break;
 			case overworld:
+				switch(e->type)
+				{
+					case SDL_KEYDOWN:
+						switch(e->key.keysym.sym)
+						{
+							case SDLK_1:
+								game.state = cutscene;
+								break;
+							case SDLK_2:
+								game.state = menu;
+								break;
+							case SDLK_3:
+								game.state = overworld;
+								break;
+							case SDLK_4:
+								game.state = underworld;
+								break;
+						}
+						break;
+				}
+
 				break;
 			case underworld:
+				switch(e->type)
+				{
+					case SDL_KEYDOWN:
+						switch(e->key.keysym.sym)
+						{
+							case SDLK_1:
+								game.state = cutscene;
+								break;
+							case SDLK_2:
+								game.state = menu;
+								break;
+							case SDLK_3:
+								game.state = overworld;
+								break;
+							case SDLK_4:
+								game.state = underworld;
+								break;
+						}
+						break;
+				}
+
 				break;
 		}
 		switch(player.state)
@@ -230,10 +313,13 @@ int render() /*{{{*/
 			filltile(&bg, 0);
 			break;
 		case menu:
+			filltile(&bg, 1);
 			break;
 		case overworld:
+			filltile(&bg, 2);
 			break;
 		case underworld:
+			filltile(&bg, 3);
 			break;
 	}
 	SDL_RenderPresent(rend);
