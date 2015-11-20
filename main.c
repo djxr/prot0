@@ -40,6 +40,7 @@ enum tile_type
 struct game_t
 {
 	enum game_state	state;
+	enum game_state	prev_state;
 	SDL_Rect	rect;
 	bool		run;
 };
@@ -176,8 +177,6 @@ int handle_events(SDL_Event *e) /*{{{*/
 {	
 	if(e->type == SDL_QUIT)
 		game.run = false;
-	else if (e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_ESCAPE)
-		game.run = false;
 	else
 	{
 		switch(game.state)
@@ -188,17 +187,12 @@ int handle_events(SDL_Event *e) /*{{{*/
 					case SDL_KEYDOWN:
 						switch(e->key.keysym.sym)
 						{
-							case SDLK_1:
-								game.state = cutscene;
-								break;
-							case SDLK_2:
+							case SDLK_m:
+								game.prev_state = game.state;
 								game.state = menu;
 								break;
-							case SDLK_3:
+							case SDLK_e:
 								game.state = overworld;
-								break;
-							case SDLK_4:
-								game.state = underworld;
 								break;
 						}
 						break;
@@ -210,17 +204,11 @@ int handle_events(SDL_Event *e) /*{{{*/
 					case SDL_KEYDOWN:
 						switch(e->key.keysym.sym)
 						{
-							case SDLK_1:
-								game.state = cutscene;
+							case SDLK_m:
+								game.state = game.prev_state;
 								break;
-							case SDLK_2:
-								game.state = menu;
-								break;
-							case SDLK_3:
-								game.state = overworld;
-								break;
-							case SDLK_4:
-								game.state = underworld;
+							case SDLK_ESCAPE:
+								game.run = false;
 								break;
 						}
 						break;
@@ -233,16 +221,11 @@ int handle_events(SDL_Event *e) /*{{{*/
 					case SDL_KEYDOWN:
 						switch(e->key.keysym.sym)
 						{
-							case SDLK_1:
-								game.state = cutscene;
-								break;
-							case SDLK_2:
+							case SDLK_m:
+								game.prev_state = game.state;
 								game.state = menu;
 								break;
-							case SDLK_3:
-								game.state = overworld;
-								break;
-							case SDLK_4:
+							case SDLK_e:
 								game.state = underworld;
 								break;
 						}
@@ -259,14 +242,12 @@ int handle_events(SDL_Event *e) /*{{{*/
 							case SDLK_1:
 								game.state = cutscene;
 								break;
-							case SDLK_2:
+							case SDLK_m:
+								game.prev_state = game.state;
 								game.state = menu;
 								break;
-							case SDLK_3:
+							case SDLK_e:
 								game.state = overworld;
-								break;
-							case SDLK_4:
-								game.state = underworld;
 								break;
 						}
 						break;
