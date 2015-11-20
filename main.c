@@ -2,8 +2,9 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#define DISPLAY_NUM 0
-#define PIXEL_SCALE_UP 4
+#define DISPLAY_NUM	0
+#define ORIG_TILE_SZ	9
+#define TILE_SZ		27
 
 // State Enums /*{{{*/
 enum game_state
@@ -35,7 +36,7 @@ enum tile_type
 	shop
 };
 /*}}}*/
-// Structures /*{{{*/
+// Structures 
 struct game_t
 {
 	enum game_state	state;
@@ -58,31 +59,50 @@ struct tile_t
 {
 	enum tile_type type;
 };
-/*}}}*/
-// Global Variables /*{{{*/
+typedef struct atlas_t
+{
+	SDL_Texture	*tex;
+	SDL_Rect	*img;
+}atlas_t;
+
+// Global Variables 
+int	i;
+//int	j;
+
 struct game_t	game = {.state = cutscene, .run = true};
 struct player_t	player = {.state = still};
 
 SDL_Window	*win;
 SDL_Renderer	*rend;
-/*}}}*/
+
+atlas_t		bg;
+
 
 int init();
 int tini();
+
 int handle_events(SDL_Event *e);
 int update();
 int render();
+
+atlas_t	bld_atlas(char *bitmap_filename, size_t len);
+void	dstr_atlas(atlas_t *a);
+
+int tile();
 
 int main(int argc, char *argv[])
 {
 	init();
 
-	// Loop Variables /*{{{*/
+	// Loop Variables 
 	Uint32		time;
 	Uint32		last_update =	0;
 	Uint32		last_render =	0;
 
-	SDL_Event	event;/*}}}*/
+	SDL_Event	event;
+
+	bg = bld_atlas("floor_tiles.bmp", 5);
+
 
 	while(game.run)
 	{
@@ -103,6 +123,8 @@ int main(int argc, char *argv[])
 			last_render = time;
 		}/*}}}*/
 	}
+
+	dstr_atlas(&bg);
 
 	tini();
 	return 0;
@@ -203,3 +225,35 @@ int render() /*{{{*/
 
 	return 0;
 }/*}}}*/
+
+int tile()
+{
+	return 0;
+}
+atlas_t bld_atlas(char *bitmap, size_t len)
+{
+	SDL_Texture	*texture;
+	SDL_Rect	*images;
+
+	SDL_Surface *surface = SDL_LoadBMP(bitmap);
+	SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 0, 255,255));
+	texture = SDL_CreateTextureFromSurface(rend, surface);
+	SDL_FreeSurface(surface);
+	// Create Rect[]
+	images = calloc(len, sizeof(SDL_Rect));
+	for (i = 0; i < len; i++)
+	{
+		images[i].x = i * ORIG_TILE_SZ;
+		images[i].y = 0;
+		images[i].w = ORIG_TILE_SZ;
+		images[i].h = ORIG_TILE_SZ;
+	}
+	atlas_t atlas = {.tex = texture, .img = images};
+
+	return atlas;
+}
+void	dstr_atlas(atlas_t *a)
+{
+	SDL_DestroyTexture(a->tex);
+	free(a->img);
+}
