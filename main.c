@@ -2,9 +2,9 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#define DISPLAY_NUM	1
-#define ORIG_TILE_SZ	9
-#define TILE_SZ		27
+#define DEF_DISPLAY_NUM		1
+#define DEF_ORIG_TILE_SZ	9
+#define DEF_TILE_SZ		27
 
 // State Enums /*{{{*/
 enum game_state
@@ -67,9 +67,10 @@ typedef struct atlas_t
 }atlas_t;
 /*}}}*/
 // Global Variables /*{{{*/
-int	i;
-int	j;
 
+int DISPLAY_NUM = DEF_DISPLAY_NUM;
+int ORIG_TILE_SZ= DEF_ORIG_TILE_SZ;
+int TILE_SZ = DEF_TILE_SZ;
 struct game_t	game = {.state = cutscene, .run = true};
 struct player_t	player = {.state = still};
 
@@ -79,6 +80,8 @@ SDL_Renderer	*rend;
 atlas_t		bg;
 /*}}}*/
 // Function Declarations /*{{{*/
+int handle_arguments(int argc, char *argv[]);
+
 int init();
 int tini();
 
@@ -96,6 +99,7 @@ int tile();
 /*}}}*/
 int main(int argc, char *argv[])
 {
+	handle_arguments(argc, argv);
 	init();
 
 	// Loop Variables 
@@ -133,7 +137,19 @@ int main(int argc, char *argv[])
 	tini();
 	return 0;
 }
-
+int handle_arguments(int argc, char *argv[]) /*{{{*/
+{
+	for(int i = 0; i < argc; i++)
+	{
+		if(!strncmp(argv[i], "-d", 3))
+		{
+			i++;
+			DISPLAY_NUM = atoi(argv[i]);
+		}
+	}
+	return 0;
+}
+/*}}}*/
 int init() /*{{{*/
 {
 	if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER)) /*{{{*/
@@ -323,7 +339,7 @@ atlas_t bld_atlas(char *bitmap, size_t len) /*{{{*/
 	SDL_FreeSurface(surface);
 	// Create Rect[]
 	images = calloc(len, sizeof(SDL_Rect));
-	for (i = 0; i < len; i++)
+	for (unsigned int i = 0; i < len; i++)
 	{
 		images[i].x = i * ORIG_TILE_SZ;
 		images[i].y = 0;
@@ -341,8 +357,8 @@ void	dstr_atlas(atlas_t *a) /*{{{*/
 }/*}}}*/
 int filltile(atlas_t *a, int img_index) /*{{{*/
 {
-	for(i = 0; i < (game.rect.h / TILE_SZ); i++)
-		for(j = 0; j < (game.rect.w / TILE_SZ); j++)
+	for(int i = 0; i < (game.rect.h / TILE_SZ); i++)
+		for(int j = 0; j < (game.rect.w / TILE_SZ); j++)
 		{
 			SDL_Rect paintbrush = {.x = j * TILE_SZ, .y = i * TILE_SZ, .w = TILE_SZ, .h = TILE_SZ};
 			SDL_RenderCopy(rend, a->tex, &a->img[img_index], &paintbrush);
