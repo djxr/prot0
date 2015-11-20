@@ -1,5 +1,5 @@
 CC=cc
-CFLAGS=-std=c99 -Wall -g -pedantic
+CFLAGS=-std=c99 -Wall -g -pedantic-errors
 LDFLAGS=-lSDL2 -lm
 
 all: main

@@ -89,6 +89,7 @@ atlas_t	bld_atlas(char *bitmap_filename, size_t len);
 void	dstr_atlas(atlas_t *a);
 
 int filltile(atlas_t *a, int img_index);
+int stamptile(atlas_t *a, int img_index, SDL_Rect dest);
 
 int tile();
 /*}}}*/
@@ -174,6 +175,8 @@ int tini() /*{{{*/
 int handle_events(SDL_Event *e) /*{{{*/
 {	
 	if(e->type == SDL_QUIT)
+		game.run = false;
+	else if (e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_ESCAPE)
 		game.run = false;
 	else
 	{
@@ -322,6 +325,7 @@ int render() /*{{{*/
 			filltile(&bg, 3);
 			break;
 	}
+	stamptile(&bg, 0, (SDL_Rect){0, 0, TILE_SZ, TILE_SZ});
 	SDL_RenderPresent(rend);
 
 	return 0;
@@ -362,5 +366,10 @@ int filltile(atlas_t *a, int img_index) /*{{{*/
 			SDL_Rect paintbrush = {.x = j * TILE_SZ, .y = i * TILE_SZ, .w = TILE_SZ, .h = TILE_SZ};
 			SDL_RenderCopy(rend, a->tex, &a->img[img_index], &paintbrush);
 		}
+	return 0;
+}/*}}}*/
+int stamptile(atlas_t *a, int img_index, SDL_Rect dest) /*{{{*/
+{
+	SDL_RenderCopy(rend, a->tex, &a->img[img_index], &dest);
 	return 0;
 }/*}}}*/
