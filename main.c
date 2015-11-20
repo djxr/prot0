@@ -146,6 +146,11 @@ int handle_arguments(int argc, char *argv[]) /*{{{*/
 			i++;
 			DISPLAY_NUM = atoi(argv[i]);
 		}
+		if(!strncmp(argv[i], "-s", 3))
+		{
+			i++;
+			TILE_SZ = atoi(argv[i]);
+		}
 	}
 	return 0;
 }
