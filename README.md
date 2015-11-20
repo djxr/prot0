@@ -13,4 +13,4 @@ stamps a sand tile in the top left to test I can
 
 ESC quits only when in menu state, otherwise close via window manager (x button or whatever you got to close windos)
 
-Command line flags: -d <display_number> -s <tile_size>
+Command line flags: -d `<display_number>` -s `<tile_size>`
