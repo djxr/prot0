@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#define DISPLAY_NUM	0
+#define DISPLAY_NUM	1
 #define ORIG_TILE_SZ	9
 #define TILE_SZ		27
 
@@ -36,7 +36,7 @@ enum tile_type
 	shop
 };
 /*}}}*/
-// Structures 
+// Structures /*{{{*/
 struct game_t
 {
 	enum game_state	state;
@@ -64,10 +64,10 @@ typedef struct atlas_t
 	SDL_Texture	*tex;
 	SDL_Rect	*img;
 }atlas_t;
-
+/*}}}*/
 // Global Variables 
 int	i;
-//int	j;
+int	j;
 
 struct game_t	game = {.state = cutscene, .run = true};
 struct player_t	player = {.state = still};
@@ -87,6 +87,8 @@ int render();
 
 atlas_t	bld_atlas(char *bitmap_filename, size_t len);
 void	dstr_atlas(atlas_t *a);
+
+int filltile(atlas_t *a, int img_index);
 
 int tile();
 
@@ -221,6 +223,19 @@ int render() /*{{{*/
 {
 	SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
 	SDL_RenderClear(rend);
+
+	switch(game.state)
+	{
+		case cutscene:
+			filltile(&bg, 0);
+			break;
+		case menu:
+			break;
+		case overworld:
+			break;
+		case underworld:
+			break;
+	}
 	SDL_RenderPresent(rend);
 
 	return 0;
@@ -230,7 +245,7 @@ int tile()
 {
 	return 0;
 }
-atlas_t bld_atlas(char *bitmap, size_t len)
+atlas_t bld_atlas(char *bitmap, size_t len) /*{{{*/
 {
 	SDL_Texture	*texture;
 	SDL_Rect	*images;
@@ -251,9 +266,19 @@ atlas_t bld_atlas(char *bitmap, size_t len)
 	atlas_t atlas = {.tex = texture, .img = images};
 
 	return atlas;
-}
-void	dstr_atlas(atlas_t *a)
+}/*}}}*/
+void	dstr_atlas(atlas_t *a) /*{{{*/
 {
 	SDL_DestroyTexture(a->tex);
 	free(a->img);
+}/*}}}*/
+int filltile(atlas_t *a, int img_index)
+{
+	for(i = 0; i < (game.rect.h / TILE_SZ); i++)
+		for(j = 0; j < (game.rect.w / TILE_SZ); j++)
+		{
+			SDL_Rect paintbrush = {.x = j * TILE_SZ, .y = i * TILE_SZ, .w = TILE_SZ, .h = TILE_SZ};
+			SDL_RenderCopy(rend, a->tex, &a->img[img_index], &paintbrush);
+		}
+	return 0;
 }
