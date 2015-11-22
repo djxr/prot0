@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
+
+// DEFAULTS
 #define DEF_DISPLAY_NUM		1
 #define DEF_ORIG_TILE_SZ	9
 #define DEF_TILE_SZ		27
@@ -37,12 +39,18 @@ enum tile_type
 };
 /*}}}*/
 // Structures /*{{{*/
+typedef struct atlas_t
+{
+	SDL_Texture	*tex;
+	SDL_Rect	*img;
+}atlas_t;
 struct game_t
 {
 	enum game_state	state;
 	enum game_state	prev_state;
 	SDL_Rect	rect;
 	bool		run;
+	atlas_t		atl;
 };
 struct player_t
 {
@@ -50,6 +58,7 @@ struct player_t
 	SDL_Rect		rect;
 	int			rep;
 	int			orbs;
+	atlas_t		atl;
 };
 struct ai_t
 {
@@ -60,11 +69,6 @@ struct tile_t
 {
 	enum tile_type type;
 };
-typedef struct atlas_t
-{
-	SDL_Texture	*tex;
-	SDL_Rect	*img;
-}atlas_t;
 /*}}}*/
 // Global Variables /*{{{*/
 
@@ -77,7 +81,6 @@ struct player_t	player = {.state = still};
 SDL_Window	*win;
 SDL_Renderer	*rend;
 
-atlas_t		bg;
 /*}}}*/
 // Function Declarations /*{{{*/
 int handle_arguments(int argc, char *argv[]);
@@ -109,7 +112,7 @@ int main(int argc, char *argv[])
 
 	SDL_Event	event;
 
-	bg = bld_atlas("floor_tiles.bmp", 5);
+	game.atl = bld_atlas("floor_tiles.bmp", 5);
 
 
 	while(game.run)
@@ -132,8 +135,7 @@ int main(int argc, char *argv[])
 		}/*}}}*/
 	}
 
-	dstr_atlas(&bg);
-
+	dstr_atlas(&game.atl);
 	tini();
 	return 0;
 }
@@ -315,19 +317,19 @@ int render() /*{{{*/
 	switch(game.state)
 	{
 		case cutscene:
-			filltile(&bg, 0);
+			filltile(&game.atl, 0);
 			break;
 		case menu:
-			filltile(&bg, 1);
+			filltile(&game.atl, 1);
 			break;
 		case overworld:
-			filltile(&bg, 2);
+			filltile(&game.atl, 2);
 			break;
 		case underworld:
-			filltile(&bg, 3);
+			filltile(&game.atl, 3);
 			break;
 	}
-	stamptile(&bg, 0, (SDL_Rect){0, 0, TILE_SZ, TILE_SZ});
+	stamptile(&game.atl, 0, (SDL_Rect){0, 0, TILE_SZ, TILE_SZ});
 	SDL_RenderPresent(rend);
 
 	return 0;
@@ -359,6 +361,7 @@ void	dstr_atlas(atlas_t *a) /*{{{*/
 {
 	SDL_DestroyTexture(a->tex);
 	free(a->img);
+	a->img = NULL;
 }/*}}}*/
 int filltile(atlas_t *a, int img_index) /*{{{*/
 {
